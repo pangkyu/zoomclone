@@ -9,6 +9,8 @@
 - express 설정
   - 터미널에서 npm i express, npm i pug 입력
 
+실행 : rpm run dev
+
 ```js
 import express from "express";
 
