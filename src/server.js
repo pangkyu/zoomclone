@@ -1,7 +1,8 @@
+//import WebSocket from "ws";
 import http from "http";
-import WebSocket from "ws";
-import express from "express";
 
+import express from "express";
+import SocketIo from "socket.io";
 const app = express();
 
 app.set("view engine", "pug");
@@ -15,9 +16,23 @@ app.get("/*", (_, res) => res.redirect("/"));
 // http서버 위에 웹소켓 서버를 만듦 
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
-const wss = new WebSocket.Server({server}); 
+const io = SocketIo(server);
+
+io.on("connection", (socket) => {
+  socket.on("enter_room", (msg, done) => {
+    console.log(msg);
+    setTimeout(() =>{
+      done();
+    }, 10000);
+  });
+});
 
 
+//const wss = new WebSocket.Server({server}); 
+
+
+/*
+  - websocket *
 const sockets = [];
 
 wss.on("connection", (socket) => {
@@ -38,6 +53,6 @@ wss.on("connection", (socket) => {
     }
     });
   });
-  
+  */
   server.listen(3000, handleListen);
 

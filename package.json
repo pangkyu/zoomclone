@@ -1,34 +1,81 @@
 {
   
   "name": "zoomclone",
+  
   "version": "1.0.0",
+  
   "description": "",
+  
   "main": "index.js",
+  
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "dev": "nodemon",
-    "start": "node scripts/start.js"
+  
+    
+  "test": "echo \"Error: no test specified\" && exit 1",
+  
+    
+  "dev": "nodemon",
+  
+    
+  "start": "node scripts/start.js"
+  
   },
+  
   "repository": {
-    "type": "git",
-    "url": "git+https://github.com/pangkyu/zoomclone.git"
+  
+    
+  "type": "git",
+  
+    
+  "url": "git+https://github.com/pangkyu/zoomclone.git"
+  
   },
+  
   "author": "",
+  
   "license": "MIT",
+  
   "bugs": {
-    "url": "https://github.com/pangkyu/zoomclone/issues"
+  
+    
+  "url": "https://github.com/pangkyu/zoomclone/issues"
+  
   },
+  
   "homepage": "https://github.com/pangkyu/zoomclone#readme",
+  
   "devDependencies": {
-    "@babel/cli": "^7.15.7",
-    "@babel/core": "^7.15.5",
-    "@babel/node": "^7.15.4",
-    "@babel/preset-env": "^7.15.6",
-    "nodemon": "^2.0.13"
+  
+    
+  "@babel/cli": "^7.15.7",
+  
+    
+  "@babel/core": "^7.15.5",
+  
+    
+  "@babel/node": "^7.15.4",
+  
+    
+  "@babel/preset-env": "^7.15.6",
+  
+    
+  "nodemon": "^2.0.13"
+  
   },
+  
   "dependencies": {
-    "express": "^4.17.1",
-    "pug": "^3.0.2",
-    "ws": "^8.2.2"
+  
+    
+  "express": "^4.17.1",
+  
+    
+  "pug": "^3.0.2",
+  
+    
+  "socket.io": "^4.2.0",
+  
+    
+  "ws": "^8.2.2"
+  
   }
 }
