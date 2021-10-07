@@ -30,6 +30,15 @@
 
 - io()는 알아서 socket.io를 실행하고 있는 서버를 찾는다.
 
+- 클라이언트 측에서 socket.io모듈을 스크립트 시켜야한다.
+
+```pug
+   <script src = "/socket.io/socket.io.js"></script>
+```
+
+- socket.io 모듈은 내부적으로 "루트/socket.io"경로에 socket.io.js파일을 자동으로 등록해둔다.
+- 단, 노드js 상에서 "socket.io 객체 생성시 설정한 path"경로로 접근해야한다. (생략시 디폴트가 /socket.io 로 지정됨)
+
 ---
 
 - socket.emit()
@@ -57,3 +66,21 @@
 
   - emit과 on의 호출이름이 같아야한다.
   - 서버는 백엔드에서 function을 호출하지만 function은 프론트엔드에서 실행이 된 것이다.
+  - 백엔드는 프론트엔드에서 오는 코드를 실행시키면 안된다. (보안문제 발생)
+
+  - 내가 원하는 만큼 백엔드로 보낼수 있다. (무제한 arg)
+    - 떄로는 socket에서 메세지를 받고싶을 때, 마지막 arg로 function을 보낸다. (콜백함수)
+    - 이 함수는 백엔드에서 실행되는 것이 아님! (백엔드에서 실행되면 보안문제다. ) ==> db에 접근이 가능해질 수 있어서
+
+---
+
+socket.join
+
+```js
+//ex)
+io.on("connection", (socket) => {
+  console.log(socket.rooms); // Set { <socket.id> }
+  socket.join("room1");
+  console.log(socket.rooms); // Set { <socket.id>, "room1" }
+});
+```
