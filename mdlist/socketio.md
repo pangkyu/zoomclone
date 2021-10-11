@@ -84,3 +84,20 @@ io.on("connection", (socket) => {
   console.log(socket.rooms); // Set { <socket.id>, "room1" }
 });
 ```
+
+---
+
+- 웹소켓에서 Room 사용 -> 서로 소통을 할 수 있는 소켓 그룹이 필요하다.
+  ==> socket IO는 기본적으로 room을 제공한다.
+
+  - 구현방법
+
+  - 서버 api에는 많은 옵션이 있는데 그 중 socket.id를 사용한다.
+
+```js
+io.on("connect", (socket) => {
+  console.log(socket.rooms);
+  socket.join("room1");
+  console.log(socket.rooms); // Set { <socket.id>}
+});
+```
