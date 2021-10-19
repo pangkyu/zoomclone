@@ -101,3 +101,21 @@ io.on("connect", (socket) => {
   console.log(socket.rooms); // Set { <socket.id>}
 });
 ```
+
+- disconnectiong
+  - 고객이 접속을 중단할 것이지만 아직 방을 완전히 나가지는 않았음!
+  ```js
+  io.on("connection", (socket) => {
+    socket.on("disconnecting", (reason) => {
+      console.log(socket.rooms); // Set { ... }
+    });
+  });
+  ```
+
+※ done()은 백엔드에서 실행되는 것이 아님. 프론트엔드에서 코드를 실행하게 함
+※ socket.io 가 겁나게 방대하니 document를 찾아보면서 공부하는 것도 좋음!
+
+---
+
+- adapter
+- MongoDB를 사용하여 서버간의 통신을 해주는 것

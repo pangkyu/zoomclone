@@ -7,29 +7,68 @@ const room = document.getElementById("room");
 let roomName = "";
 room.hidden = true;
 
+function addMessage(message){
+  const ul = room.querySelector("ul");
+  const li = document.createElement("li");
+  li.innerText = message;
+  ul.appendChild(li);
+}
+
+function handleMessageSubmit(event){
+  event.preventDefault();
+  const input = room.querySelector("#msg input");
+  const {value} = input;
+  socket.emit("new_message", value, roomName, () => {
+    addMessage(`you : ${value}`);
+  });
+  input.value = "";
+}
+
+function handleNicknameSubmit(event){
+  event.preventDefault();
+  const input = room.querySelector("#name input");
+  socket.emit("nickname", input.value);
+}
+
+function showNickname() {
+  welcome.hidden = true;
+  nickname.hidden = false;
+  const nameForm = nickname.querySelector("#name");
+  nameForm.addEventListener("submit", handleNicknameSubmit);
+}
 
 function showRoom(){
   welcome.hidden = true;
   room.hidden = false;
   const h3 = room.querySelector("h3");
   h3.innerText = `Room ${roomName}`;
+  const msgForm = room.querySelector("#msg");
+  const nameForm = room.querySelector("#name");
+  msgForm.addEventListener("submit", handleMessageSubmit);
+  nameForm.addEventListener("submit", handleNicknameSubmit);
 }
 function handleRoomSubmit(event) {
   event.preventDefault();
-  const input = form.querySelector("input");
-  socket.emit(
-    "enter_room",
-    input.value,
-    showRoom
-  );
-  roomName = input.value;
-  input.value = "";
+  const roomNameInput = form.querySelector("#roomName");
+  const nickNameInput = form.querySelector("#name");
+  socket.emit("enter_room", roomNameInput.value, nickNameInput.value ,showRoom);
+  roomName = roomNameInput.value;
+  roomNameInput.value = "";
+  const changeNameInput = room.querySelector("#name input");
+  changeNameInput.value = nickNameInput.value;
 }
 
 form.addEventListener("submit", handleRoomSubmit);
 
+socket.on("welcome", (user) => {
+  addMessage(`${user} arrived!`);
+});
 
+socket.on("bye", (left) => {
+  addMessage(`${left} left ㅠㅠ`);
+});
 
+socket.on("new_message", addMessage);
 
 /*  webSocket 사용
 const messageList = document.querySelector("ul");
