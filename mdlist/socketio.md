@@ -117,5 +117,81 @@ io.on("connect", (socket) => {
 
 ---
 
-- adapter
-- MongoDB를 사용하여 서버간의 통신을 해주는 것
+- adapter ==> 서버간의 통신을 해주는 것
+
+---
+
+- map,set,object
+
+  - ES6에서 새로 도입한 자료구조
+
+- Set, Map이 필요한 이유
+
+  - object는 문자열/심볼 만 key값으로 들어간다. (map, set은 1dhk '1'도 구분된다. )
+  - 객체의 프로퍼티의 개수를 알아야할 경우 (set, map -> size)
+  - object는 for of 또는 spread syntax로 접근이 힘들다. (object는 not iterable)
+
+- SET
+
+  - 중복을 허용하지 않는 데이터 집합
+  - set을 사용하면 데이터에 빠르게 엑세스 할 수 있다.
+  - 1와 '1'은 다른것으로 간주 즉, 중복을 확인하기 위해 강제적으로 자료형을 변형하지 않는다.
+  - forEach(callback(value, key, set)[, thisArg]), for of로 값에 접근이 가능하다.
+
+  ```js
+  const mySet = new Set(); // {}
+
+  mySet.add(1); // {1}
+  mySet.add(2); // {1,2}
+  mySet.size; // 2
+  mySet.delete(1); // {2}
+  mySet.has(2); // true
+  mySet.clear(); // {}
+
+  let arr = [...mySet]; // Spread연산자를 이용해 array로 만들 수 있다.
+
+  //array 중복제거 하고싶다면 Set바꿨다 arr하면 쉽게 해결
+  function eliminateDuplicates(items) {
+    return [...new Set(items)];
+  }
+  ```
+
+  - WeakSet
+
+    - set이 참조하는 것이 모두 사라졌을 때 원래(Set)는 유지 되지만 같이 사라지기 원한다면 --> new WeakSet()
+
+    - has,add,delete만 지원
+    - key는 반드시 object
+
+    ```js
+    let set = new WeakSet(),
+      key = {};
+    set.add(key);
+    key = null;
+    console.log(key); //false
+    // 일반 set이었으면 set.size ==> 1
+    ```
+
+---
+
+- Map
+
+  - 객체는 키-값을 저장
+  - Set과 마찬가지로 key는 자료형을 구분
+  - Set처럼 배열을 넣어서 초기화 시킬 수도 있다.
+
+  ```js
+  let myMap = new Map();
+  myMap.set(1, "HELLO"); // {1 => 'HELLO'}
+  myMap.set("1", "HELLO"); // {1 => 'HELLO', '1' => 'HELLO'}
+  myMap.set(1, "world"); // { 1 => 'world', '1' => 'HELLO'}
+  ```
+
+- WeakMap
+- WeakMap도 참조하는 객체가 사라지면 자동으로 가비지 콜렉팅된다.
+- WeakMap은 set,get,has,delete만 지원
+- key는 반드시 object
+
+- Object
+- key-value 로 저장. key를 주로 property라고 부름
+- object에서도 key는 unique하고 하나의 value와만 associated 되어있다.
