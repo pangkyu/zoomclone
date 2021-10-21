@@ -39,9 +39,13 @@ io.on("connection", (socket) => {
     socket.join(roomName);
     socket.to(roomName).emit("welcome", socket.nickname);
     done();
+    io.sockets.emit("room_change", publicRooms());
   });
   socket.on("disconnecting" , () =>{
     socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));
+  });
+  socket.on("disconnect", () =>{
+    io.sockets.emit("room_change", publicRooms());
   });
   socket.on("new_message", (msg, room, done) =>{
     socket.to(room).emit("new_message", `${socket.nickname} : ${msg}`);
@@ -79,3 +83,7 @@ wss.on("connection", (socket) => {
   */
   server.listen(3000, handleListen);
 
+  
+  
+
+ 

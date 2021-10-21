@@ -70,6 +70,19 @@ socket.on("bye", (left) => {
 
 socket.on("new_message", addMessage);
 
+socket.on("room_change", (rooms) =>{
+  roomList.innerHTML = "";
+  if(rooms.length === 0){
+    return;
+  }
+  const roomList = welcome.querySelector("ul");
+  rooms.forEach(room => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+
+});
 /*  webSocket 사용
 const messageList = document.querySelector("ul");
 const nickForm = document.querySelector("#nick");

@@ -195,3 +195,46 @@ io.on("connect", (socket) => {
 - Object
 - key-value 로 저장. key를 주로 property라고 부름
 - object에서도 key는 unique하고 하나의 value와만 associated 되어있다.
+
+---
+
+- 방 목록을 표시하는 법
+
+```js
+// app.js
+socket.on("room_change", (rooms) => {
+  roomList.innerHTML = "";
+  if (rooms.length === 0) {
+    return;
+  }
+  const roomList = welcome.querySelector("ul");
+  rooms.forEach((room) => {
+    const li = document.createElement("li");
+    li.innerText = room;
+    roomList.append(li);
+  });
+});
+```
+
+- roomList는 항상 비워주는 걸로 시작.
+
+```js
+socket.on("disconnect", () => {
+  io.sockets.emit("room_change", publicRooms());
+});
+
+function publicRooms() {
+  const {
+    sockets: {
+      adapter: { sids, rooms },
+    },
+  } = io;
+  const publicRooms = [];
+  rooms.forEach((_, key) => {
+    if (sids.get(key) === undefined) {
+      publicRooms.push(key);
+    }
+  });
+  return publicRooms;
+}
+```
