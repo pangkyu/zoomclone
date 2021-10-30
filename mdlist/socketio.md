@@ -238,3 +238,63 @@ function publicRooms() {
   return publicRooms;
 }
 ```
+
+---
+
+- 카운트 하는법
+
+```js
+ // server.js
+function countRoom(roomName){
+ return io.sockets.adapter.rooms.get(roomName)?.size;
+ // if(io.sockets.adapter.rooms.get(roomName)){
+ //  return io.sockets.adapter.rooms.get(roomName).size
+ //}else{
+//    return undefined;
+ //}
+}
+
+
+io.on("connection", (socket) => {
+ socket["nickname"] = "anonymous";
+ socket.onAny((event)=>{
+   console.log(`Socket event : ${event}`);
+ });
+ socket.on("enter_room", (roomName, nickname, done) => {
+   socket["nickname"] = nickname;
+   socket.join(roomName);
+   done();
+   socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
+   io.sockets.emit("room_change", publicRooms());
+
+ });
+
+```
+
+```js
+// app.js
+socket.on("welcome", (user, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
+  addMessage(`${user} arrived!`);
+});
+
+socket.on("bye", (left, newCount) => {
+  const h3 = room.querySelector("h3");
+  h3.innerText = `Room ${roomName} (${newCount})`;
+  addMessage(`${left} left ㅠㅠ`);
+});
+```
+
+---
+
+- 관리자 socket
+
+```js
+//터미널에
+  npm i "@socket.io/admin-ui"
+```
+
+그후 https://admin.socket.io 접속!
+패스설정은 할필요없다.
+http://localhost:3000/admin

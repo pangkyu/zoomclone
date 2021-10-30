@@ -1,8 +1,8 @@
 //import WebSocket from "ws";
 import http from "http";
-
+import { instrument } from "@socket.io/admin-ui";
 import express from "express";
-import SocketIo from "socket.io";
+import {Server} from "socket.io";
 const app = express();
 
 app.set("view engine", "pug");
@@ -16,7 +16,15 @@ app.get("/*", (_, res) => res.redirect("/"));
 // http서버 위에 웹소켓 서버를 만듦 
 const handleListen = () => console.log(`Listening on http://localhost:3000`);
 const server = http.createServer(app);
-const io = SocketIo(server);
+const io = new Server(server, {
+  cors : {
+    origin : ["https://admin.socket.io"],
+    credentials : true,
+  },
+});
+instrument(io, {
+  auth : false
+});
 
 function publicRooms(){
   const { sockets : {adapter : {sids, rooms }}} = io;
@@ -29,6 +37,7 @@ function publicRooms(){
   return publicRooms;
 }
 
+
 io.on("connection", (socket) => {
   socket["nickname"] = "anonymous";
   socket.onAny((event)=>{
@@ -37,12 +46,13 @@ io.on("connection", (socket) => {
   socket.on("enter_room", (roomName, nickname, done) => {   
     socket["nickname"] = nickname;
     socket.join(roomName);
-    socket.to(roomName).emit("welcome", socket.nickname);
     done();
+    socket.to(roomName).emit("welcome", socket.nickname, countRoom(roomName));
     io.sockets.emit("room_change", publicRooms());
+    
   });
   socket.on("disconnecting" , () =>{
-    socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname));
+    socket.rooms.forEach((room) => socket.to(room).emit("bye", socket.nickname, countRoom(room) -1));
   });
   socket.on("disconnect", () =>{
     io.sockets.emit("room_change", publicRooms());
@@ -54,20 +64,23 @@ io.on("connection", (socket) => {
   socket.on("nickname", (nickname) => (socket["nickname"] = nickname));
 });
 
+function countRoom(roomName){
+  return io.sockets.adapter.rooms.get(roomName)?.size;
+}
 
 //const wss = new WebSocket.Server({server}); 
 
 
 /*
-  - websocket *
+- websocket *
 const sockets = [];
 
 wss.on("connection", (socket) => {
-    sockets.push(socket);
-    socket["nickname"] = "Anon";
-    console.log("Connected to Browser ✅");
-    socket.on("close", () => console.log("Disconnected from the Browser ❌"));
-    socket.on("message", (msg) => {
+  sockets.push(socket);
+  socket["nickname"] = "Anon";
+  console.log("Connected to Browser ✅");
+  socket.on("close", () => console.log("Disconnected from the Browser ❌"));
+  socket.on("message", (msg) => {
     const msgStr = msg.toString('utf8');
     const message = JSON.parse(msgStr);
     switch(message.type){
