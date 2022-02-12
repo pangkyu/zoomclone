@@ -8,8 +8,6 @@ const cameraBtn = document.getElementById("camera");
 const cameraSelect = document.getElementById("cameras");
 
 
-let roomName = "";
-room.hidden = true;
 
 let myStream;
 let muted = false;
@@ -92,15 +90,6 @@ function handleCameraChange(){
 muteBtn.addEventListener("click", handleMuteClick);
 cameraBtn.addEventListener("click", handleCameraClick);
 cameraSelect.addEventListener("input", handleCameraChange);
-
-
-
-
-
-
-
-
-
 
 
 // -------------------------------------
